@@ -4,3 +4,7 @@
 **/Library
 **/.vs
 **/.vsconfig
+*.cache
+**/ProjectSettings
+*.csproj
+*.sln
