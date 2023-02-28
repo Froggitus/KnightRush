@@ -11,15 +11,23 @@ using UnityEngine.UIElements;
 public class NewBehaviourScript : MonoBehaviour
 {
     public float speed = 10.0f;
-    public float rotationSpeed = 100.0f;
+    public GameObject test_enemy;
+    private GameObject enemy_spawned = null;
+    public bool spawned = false;
 
     // Start is called before the first frame update
     void Start() {
-        Debug.Log("init");
+        // Debug.Log("init");
     }
 
     // Update is called once per frame
     void Update()
+    {
+        move();
+        spawnTriangle();
+    }
+
+    void move()
     {
         // Get the horizontal and vertical axis.
         // By default they are mapped to the arrow keys.
@@ -31,7 +39,34 @@ public class NewBehaviourScript : MonoBehaviour
         xTranslation *= Time.deltaTime;
         yTranslation *= Time.deltaTime;
 
-        transform.Translate(xTranslation, 0, 0);
-        transform.Translate(0, yTranslation, 0);
+        float xPos = transform.position.x + xTranslation;
+        float yPos = transform.position.y + yTranslation;
+
+        if (xPos > 10.2f) xPos = 10.2f;
+        if (xPos < -10.2f) xPos = -10.2f;
+        if (yPos > 4.5f) yPos = 4.5f;
+        if (yPos < -4.5f) yPos = -4.5f;
+
+        Vector3 newPos = new Vector3(xPos, yPos, 0.0f);
+        transform.SetPositionAndRotation(newPos, transform.rotation);
+    }
+
+    void spawnTriangle()
+    {
+        if (!spawned)
+        {
+            if (transform.position.x > 2 && transform.position.y > 2)
+            {
+                enemy_spawned = Instantiate(test_enemy, new Vector3(0, 0, 0), Quaternion.identity);
+                spawned = true;
+            }
+        } else
+        {
+            if (transform.position.x < -2 && transform.position.y < -2)
+            {
+                DestroyImmediate(enemy_spawned);
+                spawned = false;
+            }
+        }
     }
 }
